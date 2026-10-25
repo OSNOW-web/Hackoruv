@@ -311,6 +311,152 @@
   const soundToggle = document.getElementById('soundToggle');
   const audioIcon = document.getElementById('audioIcon');
   const audioLabel = document.getElementById('audioLabel');
+  const weatherStatus = document.getElementById('weatherStatus');
+  const weatherRefreshBtn = document.getElementById('weatherRefreshBtn');
+  const weatherTemperature = document.getElementById('weatherTemperature');
+  const weatherDescription = document.getElementById('weatherDescription');
+  const weatherRain = document.getElementById('weatherRain');
+  const weatherWind = document.getElementById('weatherWind');
+  const weatherWindDirection = document.getElementById('weatherWindDirection');
+  const weatherPressure = document.getElementById('weatherPressure');
+  const weatherForecastTime = document.getElementById('weatherForecastTime');
+
+  const WEATHER_API_URL = 'https://api.open-meteo.com/v1/forecast';
+  const WEATHER_REFRESH_INTERVAL_MS = 15 * 60 * 1000;
+
+  function getWeatherDescription(code) {
+    const descriptions = {
+      0: 'Clear sky',
+      1: 'Mainly clear',
+      2: 'Partly cloudy',
+      3: 'Overcast',
+      45: 'Fog',
+      48: 'Depositing rime fog',
+      51: 'Light drizzle',
+      53: 'Moderate drizzle',
+      55: 'Dense drizzle',
+      56: 'Light freezing drizzle',
+      57: 'Dense freezing drizzle',
+      61: 'Slight rain',
+      63: 'Moderate rain',
+      65: 'Heavy rain',
+      66: 'Light freezing rain',
+      67: 'Heavy freezing rain',
+      71: 'Slight snow',
+      73: 'Moderate snow',
+      75: 'Heavy snow',
+      77: 'Snow grains',
+      80: 'Slight rain showers',
+      81: 'Moderate rain showers',
+      82: 'Violent rain showers',
+      85: 'Slight snow showers',
+      86: 'Heavy snow showers',
+      95: 'Thunderstorm',
+      96: 'Thunderstorm with slight hail',
+      99: 'Thunderstorm with heavy hail'
+    };
+    return descriptions[code] || 'Unknown conditions';
+  }
+
+  function getCompassDirection(degrees) {
+    const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+    return directions[Math.round(degrees / 45) % directions.length];
+  }
+
+  function renderWeatherForecast(data) {
+    const hourly = data.hourly;
+    const requiredFields = [
+      'time',
+      'temperature_2m',
+      'rain',
+      'wind_speed_120m',
+      'pressure_msl',
+      'weather_code',
+      'wind_direction_10m'
+    ];
+    if (!hourly || requiredFields.some((field) => !Array.isArray(hourly[field]))) {
+      throw new Error('Weather provider returned an unexpected forecast format.');
+    }
+
+    const sampleCount = Math.min(...requiredFields.map((field) => hourly[field].length));
+    if (sampleCount === 0) {
+      throw new Error('Weather provider returned no hourly forecast values.');
+    }
+
+    const now = Date.now() / 1000;
+    let forecastIndex = 0;
+    for (let index = 0; index < sampleCount; index++) {
+      const timestamp = Number(hourly.time[index]);
+      if (Number.isFinite(timestamp) && timestamp <= now) forecastIndex = index;
+      if (Number.isFinite(timestamp) && timestamp >= now) {
+        forecastIndex = index;
+        break;
+      }
+    }
+
+    const values = requiredFields.slice(1).map((field) => Number(hourly[field][forecastIndex]));
+    if (values.some((value) => !Number.isFinite(value))) {
+      throw new Error('Weather provider returned invalid values for the selected forecast hour.');
+    }
+
+    const [temperature, rain, windSpeed, pressure, weatherCode, windDirection] = values;
+    const forecastTimestamp = Number(hourly.time[forecastIndex]);
+    if (!Number.isFinite(forecastTimestamp)) {
+      throw new Error('Weather provider returned an invalid forecast time.');
+    }
+
+    weatherTemperature.textContent = `${temperature.toFixed(1)} °C`;
+    weatherDescription.textContent = getWeatherDescription(weatherCode);
+    weatherRain.textContent = `${rain.toFixed(1)} mm`;
+    weatherWind.textContent = `${windSpeed.toFixed(1)} km/h`;
+    weatherWindDirection.textContent = `${getCompassDirection(windDirection)} (${Math.round(windDirection)}° at 10 m)`;
+    weatherPressure.textContent = `${pressure.toFixed(0)} hPa`;
+    weatherForecastTime.textContent = `Forecast for ${new Intl.DateTimeFormat(undefined, {
+      dateStyle: 'medium',
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'Europe/Berlin'
+    }).format(new Date(forecastTimestamp * 1000))}`;
+  }
+
+  async function loadWeatherForecast() {
+    if (weatherRefreshBtn.disabled) return;
+
+    const params = new URLSearchParams({
+      latitude: '52.52',
+      longitude: '13.41',
+      hourly: 'temperature_2m,rain,wind_speed_120m,pressure_msl,weather_code,wind_direction_10m',
+      timezone: 'GMT',
+      timeformat: 'unixtime',
+      forecast_days: '3'
+    });
+
+    weatherRefreshBtn.disabled = true;
+    weatherStatus.textContent = 'Loading forecast…';
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => controller.abort(), 12000);
+
+    try {
+      const response = await fetch(`${WEATHER_API_URL}?${params}`, { signal: controller.signal });
+      if (!response.ok) {
+        throw new Error(`Weather service returned HTTP ${response.status}.`);
+      }
+      const data = await response.json();
+      renderWeatherForecast(data);
+      weatherStatus.textContent = `Updated ${new Intl.DateTimeFormat(undefined, {
+        hour: '2-digit',
+        minute: '2-digit'
+      }).format(new Date())}`;
+    } catch (error) {
+      const detail = error.name === 'AbortError'
+        ? 'The request timed out. Try again.'
+        : error.message || 'Check your internet connection and try again.';
+      weatherStatus.textContent = `Forecast unavailable: ${detail}`;
+    } finally {
+      window.clearTimeout(timeoutId);
+      weatherRefreshBtn.disabled = false;
+    }
+  }
 
   // Probability bars
   const probH0 = document.getElementById('probH0');
@@ -1086,6 +1232,9 @@
     initSchemaTabs();
     recalculateCostThresholds();
     updateSimulationHUD();
+    loadWeatherForecast();
+    window.setInterval(loadWeatherForecast, WEATHER_REFRESH_INTERVAL_MS);
+    weatherRefreshBtn.addEventListener('click', loadWeatherForecast);
   }
 
   // Run on DOM load

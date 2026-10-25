@@ -224,6 +224,42 @@
         </div>
       </div>
 
+      <section class="weather-panel" aria-labelledby="weatherTitle" aria-live="polite">
+        <div class="weather-panel-heading">
+          <div>
+            <div class="section-eyebrow">LIVE WEATHER FORECAST</div>
+            <h3 id="weatherTitle">Berlin <span>(52.52, 13.41)</span></h3>
+          </div>
+          <div class="weather-update">
+            <span id="weatherStatus" role="status">Loading forecast&hellip;</span>
+            <button type="button" class="weather-refresh-button" id="weatherRefreshBtn">Refresh</button>
+          </div>
+        </div>
+        <div class="weather-metrics">
+          <div class="weather-metric">
+            <span class="weather-metric-label">Temperature</span>
+            <strong id="weatherTemperature">&mdash;</strong>
+            <span id="weatherDescription">Waiting for forecast</span>
+          </div>
+          <div class="weather-metric">
+            <span class="weather-metric-label">Rain</span>
+            <strong id="weatherRain">&mdash;</strong>
+            <span>Hourly precipitation</span>
+          </div>
+          <div class="weather-metric">
+            <span class="weather-metric-label">Wind at 120 m</span>
+            <strong id="weatherWind">&mdash;</strong>
+            <span id="weatherWindDirection">Direction unavailable</span>
+          </div>
+          <div class="weather-metric">
+            <span class="weather-metric-label">Sea-level pressure</span>
+            <strong id="weatherPressure">&mdash;</strong>
+            <span id="weatherForecastTime">Forecast hour unavailable</span>
+          </div>
+        </div>
+        <p class="weather-disclaimer">Forecast context only&mdash;not an emergency alert or a crisis determination. The simulator below remains demonstration data. Source: <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a>.</p>
+      </section>
+
       <!-- SIMULATOR CONTROL BAR -->
       <div class="sim-control-dock">
         <!-- Time Display -->

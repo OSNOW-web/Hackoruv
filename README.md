@@ -24,6 +24,8 @@ The application demonstrates:
 
 > **Demo limitations:** The simulator's event streams, belief trajectories, and forecasts are illustrative browser-side data; they are not connected to live city systems. Supabase Auth provides account sign-in after configuration, but it does not make the crisis data real. Do not use the demo to make operational decisions.
 
+The simulator page also displays an hourly Open-Meteo forecast for Berlin (52.52, 13.41), refreshed every 15 minutes. This is weather context only: it is not an emergency alert and does not feed the simulated crisis probabilities. Open-Meteo is linked in the weather panel for attribution.
+
 ## Run the demo
 
 No package installation or build step is required. The Supabase JavaScript client is loaded as an ES module from a CDN, so an internet connection is needed.
@@ -55,11 +57,12 @@ Student registration currently saves only the authentication account (email and 
 
 1. Choose **Episode Alpha** or **Episode Beta**.
 2. Use the timeline nodes or previous/next controls to inspect a minute, or press **Start 10-Min Stream** to play through the episode. Playback can run at `1x`, `2x`, or `4x`.
-3. Review the event feed and filter it by source category.
-4. Compare the four hypothesis probabilities, entropy, recommended policy, and cost tradeoff.
-5. Review predicted events, causal attribution, and the causal graph.
-6. Press the duty officer's **ESCALATE** button to compare your decision with the scenario outcome.
-7. Optionally toggle gateway cutout, rumor swarm, or out-of-order stream adversity. Use the cost-model sliders to explore alternative assumptions.
+3. Review the live Berlin weather forecast separately from the simulated event feed; use **Refresh** to request an updated forecast.
+4. Review the event feed and filter it by source category.
+5. Compare the four hypothesis probabilities, entropy, recommended policy, and cost tradeoff.
+6. Review predicted events, causal attribution, and the causal graph.
+7. Press the duty officer's **ESCALATE** button to compare your decision with the scenario outcome.
+8. Optionally toggle gateway cutout, rumor swarm, or out-of-order stream adversity. Use the cost-model sliders to explore alternative assumptions.
 
 ## Scenarios
 
