@@ -1608,77 +1608,131 @@ body.tactical-theme::before {
 }
 
 /* ==========================================================================
-   SYSTEM PILLARS / REQUIREMENTS
+   SYSTEM PILLARS / REQUIREMENTS (THE 6 PILLARS)
    ========================================================================== */
+.pillars-grid,
 .system-pillars-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.5rem;
-  margin-top: 2rem;
+  margin-top: 2.2rem;
+  align-items: stretch;
 }
 
 .pillar-card {
-  background: #ffffff;
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-md);
-  padding: 1.8rem;
-  box-shadow: var(--shadow-card);
-  transition: all 0.2s ease;
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-subtle, #e2e8f0);
+  border-radius: var(--radius-md, 8px);
+  padding: 1.5rem 1.4rem;
+  box-shadow: var(--shadow-card, 0 2px 8px rgba(0,0,0,0.06));
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.pillar-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3.5px;
+  background: #2563eb;
+  opacity: 0.85;
 }
 
 .pillar-card:hover {
-  transform: translateY(-2px);
-  border-color: #bfdbfe;
-  box-shadow: var(--shadow-panel);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
 }
 
+/* Pillar Badges & Icons */
+.pillar-badge,
 .pillar-num {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
+  align-self: flex-start;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.65rem;
   font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  margin-bottom: 0.85rem;
+  background: rgba(37, 99, 235, 0.1);
   color: #2563eb;
-  margin-bottom: 0.8rem;
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  display: inline-flex;
+  align-items: center;
+}
+
+.pillar-icon {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  min-height: 38px;
+  border-radius: 8px;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.9rem;
+}
+
+.pillar-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.2;
 }
 
 .pillar-title {
-  font-family: var(--font-display);
-  font-size: 1.15rem;
+  font-family: var(--font-display, sans-serif);
+  font-size: 1.08rem;
   font-weight: 800;
   color: #0f172a;
-  margin-bottom: 0.6rem;
+  line-height: 1.35;
+  margin: 0 0 0.55rem 0;
 }
 
 .pillar-desc {
-  font-size: 0.88rem;
-  color: var(--text-muted);
-  line-height: 1.55;
-  margin-bottom: 1rem;
+  font-size: 0.84rem;
+  color: #475569;
+  line-height: 1.52;
+  margin-bottom: 0.95rem;
 }
 
 .pillar-formula {
-  background: #f1f5f9;
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  padding: 0.6rem 0.8rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 5px;
+  padding: 0.5rem 0.7rem;
   margin-bottom: 1rem;
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
   color: #0f172a;
   overflow-x: auto;
+  white-space: nowrap;
 }
 
 .pillar-list {
   list-style: none;
-  font-size: 0.82rem;
+  font-size: 0.80rem;
   color: #334155;
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.42rem;
+  margin-top: auto;
+  padding: 0;
 }
 
 .pillar-list li {
   position: relative;
-  padding-left: 1.1rem;
+  padding-left: 1.15rem;
+  line-height: 1.45;
 }
 
 .pillar-list li::before {
@@ -1686,6 +1740,74 @@ body.tactical-theme::before {
   position: absolute;
   left: 0;
   color: #2563eb;
+  font-weight: 700;
+}
+
+/* Individual Pillar Card Theming (Pillars 1 to 6) */
+/* Pillar 1: Honest Probabilities & Twin Test */
+.pillar-card:nth-child(1)::before { background: #2563eb; }
+.pillar-card:nth-child(1) .pillar-badge { background: rgba(37, 99, 235, 0.1); color: #2563eb; border-color: rgba(37, 99, 235, 0.25); }
+.pillar-card:nth-child(1) .pillar-icon { background: #eff6ff; color: #2563eb; border-color: #dbeafe; }
+.pillar-card:nth-child(1):hover { border-color: #93c5fd; }
+
+/* Pillar 2: Optimal Stopping & Cost Model */
+.pillar-card:nth-child(2)::before { background: #0891b2; }
+.pillar-card:nth-child(2) .pillar-badge { background: rgba(8, 145, 178, 0.1); color: #0891b2; border-color: rgba(8, 145, 178, 0.25); }
+.pillar-card:nth-child(2) .pillar-icon { background: #ecfeff; color: #0891b2; border-color: #cffafe; }
+.pillar-card:nth-child(2):hover { border-color: #67e8f9; }
+
+/* Pillar 3: Foresight & Causal Reasoning */
+.pillar-card:nth-child(3)::before { background: #7c3aed; }
+.pillar-card:nth-child(3) .pillar-badge { background: rgba(124, 58, 237, 0.1); color: #7c3aed; border-color: rgba(124, 58, 237, 0.25); }
+.pillar-card:nth-child(3) .pillar-icon { background: #f5f3ff; color: #7c3aed; border-color: #ede9fe; }
+.pillar-card:nth-child(3):hover { border-color: #c4b5fd; }
+
+/* Pillar 4: Learning & Prior Shifts */
+.pillar-card:nth-child(4)::before { background: #059669; }
+.pillar-card:nth-child(4) .pillar-badge { background: rgba(5, 150, 105, 0.1); color: #059669; border-color: rgba(5, 150, 105, 0.25); }
+.pillar-card:nth-child(4) .pillar-icon { background: #ecfdf5; color: #059669; border-color: #d1fae5; }
+.pillar-card:nth-child(4):hover { border-color: #6ee7b7; }
+
+/* Pillar 5: Adversity & Cutout Resilience */
+.pillar-card:nth-child(5)::before { background: #d97706; }
+.pillar-card:nth-child(5) .pillar-badge { background: rgba(217, 119, 6, 0.1); color: #d97706; border-color: rgba(217, 119, 6, 0.25); }
+.pillar-card:nth-child(5) .pillar-icon { background: #fffbeb; color: #d97706; border-color: #fef3c7; }
+.pillar-card:nth-child(5):hover { border-color: #fcd34d; }
+
+/* Pillar 6: Stability & Anti-Flip-Flop */
+.pillar-card:nth-child(6)::before { background: #e11d48; }
+.pillar-card:nth-child(6) .pillar-badge { background: rgba(225, 29, 72, 0.1); color: #e11d48; border-color: rgba(225, 29, 72, 0.25); }
+.pillar-card:nth-child(6) .pillar-icon { background: #fff1f2; color: #e11d48; border-color: #ffe4e6; }
+.pillar-card:nth-child(6):hover { border-color: #fda4af; }
+
+/* Responsive Viewport Sizing Breakpoints */
+@media (max-width: 1140px) {
+  .pillars-grid,
+  .system-pillars-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+  .pillar-card {
+    padding: 1.35rem 1.25rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .pillars-grid,
+  .system-pillars-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .pillar-card {
+    padding: 1.2rem 1.1rem;
+  }
+  .pillar-title {
+    font-size: 1.02rem;
+  }
+  .pillar-desc {
+    font-size: 0.81rem;
+  }
 }
 
 /* ==========================================================================
