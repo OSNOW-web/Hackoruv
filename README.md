@@ -46,8 +46,10 @@ No package installation or build step is required. The Supabase JavaScript clien
 1. Create a Supabase project and enable Email and Google authentication. For Google, configure the OAuth client credentials in the Supabase Google provider settings.
 2. Confirm the Supabase **Project URL** in [`supabase-config.js`](./supabase-config.js) matches **Project Settings → API** for your project.
 3. Confirm the publishable/anon key in that file belongs to the same project. A publishable key is intended for browser use; never put a service-role key in frontend code.
-4. In Supabase Auth settings, add the deployed app URL (and `http://localhost:8085`) to the allowed redirect/site URLs as applicable. The Google sign-in flow returns to `index.html`, so its origin must be allowed.
-5. Open the app through localhost or its deployed HTTPS URL. Choose **Create account** to register a student using email and password; Supabase Auth stores the account record. If email confirmation is enabled, confirm the address before signing in.
+4. In Supabase **Authentication → URL Configuration**, set the local Site URL to `http://localhost:8085` and add `http://localhost:8085/index.html` to the allowed redirect URLs (also add your exact deployed `index.html` URL). The app's Google sign-in redirect must be allowed.
+5. In Google Cloud, the OAuth client **Authorized redirect URI** must point to the Supabase callback URL shown in Supabase's Google provider settings, typically `https://<project-ref>.supabase.co/auth/v1/callback`. This is different from the app redirect URL.
+6. In Supabase **Authentication → Providers → Google**, enter the client ID and client secret from that same Google Cloud Web OAuth client. If sign-in reports `Unable to exchange external code`, recheck that the ID and secret match and that the Google Cloud authorized redirect URI is the Supabase callback URL.
+7. Open the app through localhost or its deployed HTTPS URL. Choose **Create account** to register a student using email and password; Supabase Auth stores the account record. If email confirmation is enabled, confirm the address before signing in.
 
 The **Keep me signed in** option controls whether the Supabase session uses persistent browser storage or session-only storage. Google Fonts are loaded when internet access is available; local system fonts are used as fallbacks.
 

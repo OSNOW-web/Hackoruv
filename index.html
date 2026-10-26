@@ -21,35 +21,53 @@
       window.location.replace('login.html?setup=supabase');
     } else {
       try {
-        const { data, error } = await supabase.auth.getSession();
-        if (error) throw error;
-        if (!data.session) {
-          window.location.replace('login.html');
-        } else {
-          const { data: userData, error: userError } = await supabase.auth.getUser();
-          if (userError) throw userError;
-          if (!userData.user) {
-            window.location.replace('login.html');
-          } else {
-            showUser(userData.user);
-            document.documentElement.classList.remove('auth-pending');
+        const callbackParams = new URLSearchParams(window.location.search);
+        const callbackHashParams = new URLSearchParams(window.location.hash.slice(1));
+        const callbackError = callbackParams.get('error_description')
+          || callbackParams.get('error')
+          || callbackHashParams.get('error_description')
+          || callbackHashParams.get('error');
+        if (callbackError) {
+          const loginUrl = new URL('login.html', window.location.href);
+          loginUrl.searchParams.set('authError', 'oauth');
+          loginUrl.searchParams.set('detail', callbackError);
+          window.location.replace(loginUrl.href);
+        }
 
-            const logoutBtn = document.getElementById('logoutBtn');
-            logoutBtn?.addEventListener('click', async () => {
-              logoutBtn.disabled = true;
-              const { error: signOutError } = await supabase.auth.signOut();
-              if (signOutError) {
-                logoutBtn.disabled = false;
-                window.alert('Sign-out failed: ' + signOutError.message);
-                return;
-              }
-              window.location.replace('login.html?logout=1');
-            });
+        if (!callbackError) {
+          const { data, error } = await supabase.auth.getSession();
+          if (error) throw error;
+          if (!data.session) {
+            window.location.replace('login.html?authError=no-session');
+          } else {
+            const { data: userData, error: userError } = await supabase.auth.getUser();
+            if (userError) throw userError;
+            if (!userData.user) {
+              window.location.replace('login.html?authError=no-session');
+            } else {
+              showUser(userData.user);
+              document.documentElement.classList.remove('auth-pending');
+
+              const logoutBtn = document.getElementById('logoutBtn');
+              logoutBtn?.addEventListener('click', async () => {
+                logoutBtn.disabled = true;
+                const { error: signOutError } = await supabase.auth.signOut();
+                if (signOutError) {
+                  logoutBtn.disabled = false;
+                  window.alert('Sign-out failed: ' + signOutError.message);
+                  return;
+                }
+                window.location.replace('login.html?logout=1');
+              });
+            }
           }
         }
       } catch (error) {
         console.error('Unable to verify Supabase session:', error);
-        window.location.replace('login.html?authError=session');
+        const loginUrl = new URL('login.html', window.location.href);
+        loginUrl.searchParams.set('authError', 'session');
+        loginUrl.searchParams.set('detail', error.message || 'Check your connection and sign in again.');
+        window.location.replace(loginUrl.href);
       }
     }
   </script>

@@ -14,6 +14,13 @@ function showFeedback(text, isError = true) {
   message.className = isError ? 'message-error' : 'message-success';
 }
 
+function describeAuthError(detail) {
+  if (detail?.includes('Unable to exchange external code')) {
+    return 'Google OAuth code exchange failed. In Supabase Authentication > Providers > Google, verify the Client ID and Client Secret belong to the same Google Cloud Web OAuth client. In Google Cloud, set its Authorized redirect URI to https://jwpmneejwyyfvfdsmcel.supabase.co/auth/v1/callback (the Supabase callback, not localhost).';
+  }
+  return detail;
+}
+
 function setBusy(isBusy, text = 'SIGN IN') {
   loginBtn.disabled = isBusy;
   loginBtn.textContent = text;
@@ -59,7 +66,14 @@ const queryParams = new URLSearchParams(window.location.search);
 if (queryParams.get('setup') === 'supabase' || !isSupabaseConfigured) {
   showFeedback('Supabase is not configured yet. Add your Project URL in supabase-config.js.', true);
 } else if (queryParams.get('authError') === 'session') {
-  showFeedback('Could not verify your Supabase session. Check your connection and sign in again.');
+  const detail = describeAuthError(queryParams.get('detail'));
+  showFeedback(detail
+    ? `Could not verify your Supabase session: ${detail}`
+    : 'Could not verify your Supabase session. Check your connection and sign in again.');
+} else if (queryParams.get('authError') === 'no-session') {
+  showFeedback('Google returned without a Supabase session. Check that http://localhost:8085/index.html is in Supabase Auth’s allowed redirect URLs, then try again.');
+} else if (queryParams.get('authError') === 'oauth') {
+  showFeedback(describeAuthError(queryParams.get('detail')) || 'Google sign-in was not completed. Check your Google and Supabase OAuth settings.');
 }
 
 form.addEventListener('submit', async (event) => {
