@@ -1,10 +1,31 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-const SUPABASE_URL = 'https://jwpmneejwyyfvfdsmcel.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_sLsBZpKNQEkUh_FKwE21IQ_XIb-t0MH';
 const STORAGE_PREFERENCE_KEY = 'crisisSense_supabase_remember';
 
-export const isSupabaseConfigured = Boolean(SUPABASE_URL);
+// Dynamically retrieve Supabase configuration from FastAPI backend (/api/config)
+// Keys are read securely from .env and NEVER hardcoded in client source code.
+let SUPABASE_URL = '';
+let SUPABASE_ANON_KEY = '';
+
+const apiBase = (window.location.port === '8000') ? '' : 'http://localhost:8000';
+try {
+  const resp = await fetch(`${apiBase}/api/config`);
+  if (resp.ok) {
+    const cfg = await resp.json();
+    SUPABASE_URL = cfg.supabase_url || '';
+    SUPABASE_ANON_KEY = cfg.supabase_anon_key || '';
+  }
+} catch (e) {
+  // Offline or running standalone
+}
+
+// Optional developer override from localStorage
+if (!SUPABASE_URL) {
+  SUPABASE_URL = localStorage.getItem('CRISIS_SUPABASE_URL') || '';
+  SUPABASE_ANON_KEY = localStorage.getItem('CRISIS_SUPABASE_ANON_KEY') || '';
+}
+
+export const isSupabaseConfigured = Boolean(SUPABASE_URL && SUPABASE_ANON_KEY);
 
 const authStorage = {
   getItem(key) {
@@ -24,14 +45,16 @@ const authStorage = {
   }
 };
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-  auth: {
-    storage: authStorage,
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: true
-  }
-});
+export const supabase = isSupabaseConfigured
+  ? createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        storage: authStorage,
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    })
+  : null;
 
 export function setRememberSession(remember) {
   localStorage.setItem(STORAGE_PREFERENCE_KEY, String(remember));
