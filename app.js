@@ -1266,8 +1266,9 @@
     return directions[Math.round(degrees / 45) % directions.length];
   }
 
-  // --- BERLIN LOCATIONS & SUB-LOCATIONS METROPOLITAN REGISTRY ---
+  // --- WORLDWIDE & INDIA CRITICAL METROPOLITAN REGISTRY ---
   const METROPOLITAN_REGIONS = {
+    // 🇩🇪 Germany — Berlin (Primary Baseline)
     berlin_mitte: {
       name: 'Berlin — Mitte / Central',
       shortName: 'BERLIN — MITTE',
@@ -1365,10 +1366,224 @@
         { id: 'karl_marx_str', name: 'Karl-Marx-Straße Commercial Arterial', sensor: 'Traffic Ingestion Cam (cam_junction_7)', tier: 'Dense Urban Emergency Route' },
         { id: 'scada_ring_south', name: 'SCADA South Ring Feeder', sensor: 'Telemetry Remote Unit (scada_south_ring)', tier: 'District Power Distribution' }
       ]
+    },
+
+    // 🇮🇳 India — Priority Metropolises
+    india_nagpur: {
+      name: 'Nagpur — Zero Mile / Central Hub',
+      shortName: 'INDIA — NAGPUR',
+      lat: '21.1458',
+      lon: '79.0882',
+      timezone: 'Asia/Kolkata',
+      pop: '2.8M POP',
+      subLocations: [
+        { id: 'ambazari_basin', name: 'Ambazari Lake & Nag River Basin', sensor: 'Hydro Spillway Sonar (drain_ambazari)', tier: 'Tier-1 Urban Flood Catchment' },
+        { id: 'mihan_scada', name: 'MIHAN SEZ SCADA Power Hub', sensor: '132kV Transformer Feed (scada_mihan_4)', tier: 'Industrial Infrastructure Grid' },
+        { id: 'aiims_gmch_er', name: 'AIIMS Nagpur & GMCH Trauma ER', sensor: 'Emergency Triage Rate (er_gmch_trauma)', tier: 'Central India Apex Trauma' },
+        { id: 'wardha_road', name: 'Wardha Road Arterial Corridor (NH 44)', sensor: 'Radar Doppler Loop (traffic_wardha_rd)', tier: 'National Highway Primary Lifeline' }
+      ]
+    },
+    india_mumbai: {
+      name: 'Mumbai — MMR Coastal Region',
+      shortName: 'INDIA — MUMBAI',
+      lat: '19.0760',
+      lon: '72.8777',
+      timezone: 'Asia/Kolkata',
+      pop: '21.3M POP',
+      subLocations: [
+        { id: 'mithi_bkc', name: 'Mithi River & BKC Retention Basin', sensor: 'Tidal Flap Gate Sensor (drain_mithi_bkc)', tier: 'High-Tide Surge Barrier' },
+        { id: 'dharavi_pump', name: 'Dharavi Heavy Pumping Station & SCADA', sensor: 'Pumping Velocity Monitor (scada_dharavi_pump)', tier: 'Critical Stormwater Pumping' },
+        { id: 'kem_sion_er', name: 'KEM Hospital & Sion Trauma ER Intake', sensor: 'Emergency Influx Stream (er_kem_sion)', tier: 'Level-1 Disaster Medical Center' },
+        { id: 'weh_arterial', name: 'Western Express Highway (WEH) Bandra', sensor: 'Optical Density Cam (traffic_weh_bandra)', tier: 'North-South Metropolitan Lifeline' }
+      ]
+    },
+    india_delhi: {
+      name: 'New Delhi — National Capital Region (NCR)',
+      shortName: 'INDIA — NEW DELHI',
+      lat: '28.6139',
+      lon: '77.2090',
+      timezone: 'Asia/Kolkata',
+      pop: '33.0M POP',
+      subLocations: [
+        { id: 'yamuna_ito', name: 'Yamuna River Floodplain & ITO Barrage', sensor: 'Barrage Gate Inundation Sensor (drain_yamuna_ito)', tier: 'Inter-State River Floodway' },
+        { id: 'badarpur_scada', name: 'Badarpur & Maharani Bagh Grid SCADA', sensor: '220kV Ring Bus Monitor (scada_delhi_ring)', tier: 'National Capital Grid Intertie' },
+        { id: 'aiims_delhi_er', name: 'AIIMS Delhi Apex Trauma Center', sensor: 'Mass Casualty Intake Tracker (er_aiims_trauma)', tier: 'National Apex Medical Facility' },
+        { id: 'ring_road_delhi', name: 'Ring Road & Barapullah Elevated Arterial', sensor: 'Magnetic Ingestion Loop (traffic_ring_road)', tier: 'Core Urban Transit Arterial' }
+      ]
+    },
+    india_bengaluru: {
+      name: 'Bengaluru — Tech & Lake Cascade Corridor',
+      shortName: 'INDIA — BENGALURU',
+      lat: '12.9716',
+      lon: '77.5946',
+      timezone: 'Asia/Kolkata',
+      pop: '13.6M POP',
+      subLocations: [
+        { id: 'bellandur_basin', name: 'Bellandur & Varthur Lake Drainage Basin', sensor: 'Cascading Sluice Level (drain_bellandur)', tier: 'Interconnected Urban Lake Chain' },
+        { id: 'ecity_scada', name: 'Electronic City & Whitefield Substation', sensor: 'SCADA Ring Monitor (scada_ecity_sub)', tier: 'High-Tech Industrial Power Grid' },
+        { id: 'victoria_hosp_er', name: 'Victoria Hospital & Bowring Emergency ER', sensor: 'Acute Trauma Intake (er_victoria_hosp)', tier: 'Regional Government Trauma Hub' },
+        { id: 'orr_silkboard', name: 'Outer Ring Road (ORR) Silk Board Arterial', sensor: 'Velocity Cam Array (traffic_orr_silk)', tier: 'Primary Tech Economic Lifeline' }
+      ]
+    },
+    india_chennai: {
+      name: 'Chennai — Coastal Estuary Region',
+      shortName: 'INDIA — CHENNAI',
+      lat: '13.0827',
+      lon: '80.2707',
+      timezone: 'Asia/Kolkata',
+      pop: '11.5M POP',
+      subLocations: [
+        { id: 'adyar_cooum', name: 'Adyar & Cooum River Estuary Basin', sensor: 'Tidal Inundation Monitor (drain_adyar_estuary)', tier: 'Coastal Monsoon Floodway' },
+        { id: 'taramani_scada', name: 'Taramani Coastal Substation SCADA Grid', sensor: 'Transformer Intertie (scada_taramani)', tier: 'Coastal Power Distribution' },
+        { id: 'rggh_chennai_er', name: 'Rajiv Gandhi Govt General Hospital ER', sensor: 'Disaster Influx Telemetry (er_rggh_chennai)', tier: 'Regional Emergency Medical Hub' },
+        { id: 'omr_expressway', name: 'Old Mahabalipuram Road (OMR) IT Expressway', sensor: 'Loop Speed Detector (traffic_omr_express)', tier: 'Coastal Evacuation Corridor' }
+      ]
+    },
+    india_hyderabad: {
+      name: 'Hyderabad — Deccan Cyber Corridor',
+      shortName: 'INDIA — HYDERABAD',
+      lat: '17.3850',
+      lon: '78.4867',
+      timezone: 'Asia/Kolkata',
+      pop: '10.8M POP',
+      subLocations: [
+        { id: 'musi_hussainsagar', name: 'Musi River Channel & Hussain Sagar Sluice', sensor: 'Flood Basin Sonar (drain_musi_hussain)', tier: 'Urban Watershed Drainage' },
+        { id: 'hitec_scada', name: 'HITEC City Cyber SCADA Hub', sensor: 'Switchgear Telemetry (scada_hitec_hub)', tier: 'Industrial Sub-Transmission Ring' },
+        { id: 'osmania_nims_er', name: 'Osmania General Hospital & NIMS ER', sensor: 'Inpatient Emergency Stream (er_osmania_nims)', tier: 'Deccan Regional Apex Care' },
+        { id: 'orr_hyderabad', name: 'Nehru Outer Ring Road (ORR) Junction', sensor: 'Expressway Traffic Radar (traffic_hyderabad_orr)', tier: 'Orbital Disaster Transit Ring' }
+      ]
+    },
+    india_kolkata: {
+      name: 'Kolkata — Hooghly Delta Region',
+      shortName: 'INDIA — KOLKATA',
+      lat: '22.5726',
+      lon: '88.3639',
+      timezone: 'Asia/Kolkata',
+      pop: '15.1M POP',
+      subLocations: [
+        { id: 'hooghly_lock', name: 'Hooghly River Lock Gates & Canal Basin', sensor: 'Tidal Crest Barrier (drain_hooghly_lock)', tier: 'Estuarine Flood Defense' },
+        { id: 'saltlake_scada', name: 'Bidhannagar Salt Lake SCADA Substation', sensor: 'Feeder Bus Monitor (scada_saltlake)', tier: 'East Sector Municipal Grid' },
+        { id: 'sskm_trauma_er', name: 'SSKM Hospital & IPGMER Trauma Center', sensor: 'Critical Triage Admissions (er_sskm_trauma)', tier: 'State Referral Trauma Apex' },
+        { id: 'em_bypass', name: 'Eastern Metropolitan (EM) Bypass Corridor', sensor: 'Traffic Velocity Radar (traffic_em_bypass)', tier: 'Eastern Arterial Route' }
+      ]
+    },
+    india_pune: {
+      name: 'Pune — Mula-Mutha Metropolitan Area',
+      shortName: 'INDIA — PUNE',
+      lat: '18.5204',
+      lon: '73.8567',
+      timezone: 'Asia/Kolkata',
+      pop: '7.2M POP',
+      subLocations: [
+        { id: 'mula_mutha_dam', name: 'Khadakwasla Dam Outflow & Mula-Mutha Basin', sensor: 'Weir Discharge Sensor (drain_mula_mutha)', tier: 'Reservoir Floodgate Channel' },
+        { id: 'hinjawadi_scada', name: 'Hinjawadi Infotech Park SCADA Hub', sensor: '110kV Line Telemetry (scada_hinjawadi)', tier: 'Tech Park Dedicated Substation' },
+        { id: 'sassoon_er', name: 'Sassoon General Hospital Emergency ER', sensor: 'Trauma Queue Telemetry (er_sassoon_pune)', tier: 'Government Emergency Hospital' },
+        { id: 'wakad_express', name: 'Pune-Mumbai Expressway Wakad Interchange', sensor: 'Doppler Loop Tracker (traffic_wakad_express)', tier: 'Inter-City Disaster Arterial' }
+      ]
+    },
+
+    // 🌍 Worldwide Global Crisis Metropolises
+    world_london: {
+      name: 'London — Greater London, UK',
+      shortName: 'UK — LONDON',
+      lat: '51.5074',
+      lon: '-0.1278',
+      timezone: 'Europe/London',
+      pop: '9.0M POP',
+      subLocations: [
+        { id: 'thames_barrier', name: 'Thames Barrier & Isle of Dogs Basin', sensor: 'Tidal Surge Sonar (drain_thames_barrier)', tier: 'Maritime Tidal Surge Defense' },
+        { id: 'london_scada', name: 'National Grid City of London Intertie', sensor: 'SCADA Remote Bus (scada_london_grid)', tier: 'Core Financial Sub-Transmission' },
+        { id: 'st_thomas_er', name: "St Thomas' & Royal London Hospital ER", sensor: 'Emergency Influx Stream (er_st_thomas)', tier: 'Level-1 Metropolitan Trauma' },
+        { id: 'a40_westway', name: 'A40 Westway & Blackwall Tunnel Corridor', sensor: 'Loop Speed Detector (traffic_a40_westway)', tier: 'Key Radial Evacuation Route' }
+      ]
+    },
+    world_newyork: {
+      name: 'New York — NYC Metro, USA',
+      shortName: 'USA — NEW YORK',
+      lat: '40.7128',
+      lon: '-74.0060',
+      timezone: 'America/New_York',
+      pop: '8.8M POP',
+      subLocations: [
+        { id: 'nyc_battery', name: 'East River Storm Surge & Battery Sluice', sensor: 'NOAA Tide Gauge (drain_nyc_battery)', tier: 'Low-Lying Coastal Barrier' },
+        { id: 'coned_east', name: 'ConEd East River 138kV Substation', sensor: 'SCADA Substation Breaker (scada_coned_east)', tier: 'Manhattan Core Power Distribution' },
+        { id: 'bellevue_er', name: 'Bellevue Hospital Apex Trauma Center', sensor: 'Disaster Influx Stream (er_bellevue_nyc)', tier: 'Flagship Level-1 Trauma' },
+        { id: 'fdr_highway', name: 'FDR Drive & West Side Highway Corridor', sensor: 'Doppler Radar Array (traffic_fdr_drive)', tier: 'Peripheral Waterfront Arterial' }
+      ]
+    },
+    world_tokyo: {
+      name: 'Tokyo — Greater Tokyo Area, Japan',
+      shortName: 'JAPAN — TOKYO',
+      lat: '35.6762',
+      lon: '139.6503',
+      timezone: 'Asia/Tokyo',
+      pop: '14.1M POP (38M METRO)',
+      subLocations: [
+        { id: 'tokyo_gcans', name: 'G-Cans Underground Discharge Channel', sensor: 'Super-Silo Hydro Sonar (drain_tokyo_gcans)', tier: 'Subterranean Flood Reservoir' },
+        { id: 'tepco_shinjuku', name: 'TEPCO Shinjuku SCADA Central', sensor: 'Seismic Intertie Bus (scada_tepco_shinjuku)', tier: 'Seismic-Hardened Grid Hub' },
+        { id: 'tokyo_univ_er', name: 'Tokyo University Hospital Emergency ER', sensor: 'Acute Triage Tracker (er_tokyo_univ)', tier: 'National Disaster Medical Center' },
+        { id: 'shuto_c1', name: 'Shuto Expressway C1 Inner Circular Route', sensor: 'Optical Speed Cam (traffic_shuto_c1)', tier: 'Core Transit Viaduct' }
+      ]
+    },
+    world_paris: {
+      name: 'Paris — Île-de-France, France',
+      shortName: 'FRANCE — PARIS',
+      lat: '48.8566',
+      lon: '2.3522',
+      timezone: 'Europe/Paris',
+      pop: '11.0M METRO',
+      subLocations: [
+        { id: 'seine_austerlitz', name: 'Seine River Flood Gates & Austerlitz Basin', sensor: 'River Level Gauge (drain_seine_austerlitz)', tier: 'Regulated River Channel' },
+        { id: 'rte_paris', name: 'RTE Paris SCADA Sub-Transmission Hub', sensor: 'HV Feeder Bus (scada_rte_paris)', tier: 'Metropolitan Power Ring' },
+        { id: 'pitie_er', name: 'Pitié-Salpêtrière Hospital Emergency ER', sensor: 'Critical Admissions (er_pitie_salpetriere)', tier: 'Level-1 Trauma Center' },
+        { id: 'peripherique', name: 'Boulevard Périphérique Ring Corridor', sensor: 'Traffic Velocity Loop (traffic_peripherique)', tier: 'Urban Orbital Highway' }
+      ]
+    },
+    world_singapore: {
+      name: 'Singapore — Marina & Islandwide',
+      shortName: 'SINGAPORE',
+      lat: '1.3521',
+      lon: '103.8198',
+      timezone: 'Asia/Singapore',
+      pop: '5.9M POP',
+      subLocations: [
+        { id: 'marina_barrage', name: 'Marina Barrage & Stamford Detention Basin', sensor: 'Tidal Crest Sensor (drain_marina_barrage)', tier: 'Storm Water Silo & Tidal Gate' },
+        { id: 'sp_grid', name: 'SP Group PowerGrid SCADA Center', sensor: '400kV Cable Monitor (scada_sp_grid)', tier: 'Fully Underground Power Grid' },
+        { id: 'sgh_singapore', name: 'Singapore General Hospital (SGH) Trauma', sensor: 'Emergency Intake (er_sgh_singapore)', tier: 'Primary Acute Referral Center' },
+        { id: 'pie_express', name: 'Pan Island Expressway (PIE) Corridor', sensor: 'EMAS Traffic Radar (traffic_pie_expressway)', tier: 'East-West Trunk Arterial' }
+      ]
+    },
+    world_dubai: {
+      name: 'Dubai — Central & Coastal, UAE',
+      shortName: 'UAE — DUBAI',
+      lat: '25.2048',
+      lon: '55.2708',
+      timezone: 'Asia/Dubai',
+      pop: '3.6M POP',
+      subLocations: [
+        { id: 'dubai_deep', name: 'Dubai Deep Tunnel Stormwater System', sensor: 'Subsurface Flow Sonar (drain_dubai_deep)', tier: 'Gravity Drainage Silo' },
+        { id: 'dewa_central', name: 'DEWA SCADA Power & Desalination Hub', sensor: 'Telemetry Monitor (scada_dewa_central)', tier: 'Power & Water Interlink' },
+        { id: 'rashid_hosp', name: 'Rashid Hospital Trauma & Emergency Center', sensor: 'Level-1 ER Telemetry (er_rashid_hospital)', tier: 'Regional Disaster ER' },
+        { id: 'sheikh_zayed', name: 'Sheikh Zayed Road (E11) Arterial Corridor', sensor: 'Smart Radar Grid (traffic_sheikh_zayed)', tier: 'Primary Transit Axis' }
+      ]
+    },
+    world_sydney: {
+      name: 'Sydney — Hawkesbury & Harbor, Australia',
+      shortName: 'AUSTRALIA — SYDNEY',
+      lat: '-33.8688',
+      lon: '151.2093',
+      timezone: 'Australia/Sydney',
+      pop: '5.3M POP',
+      subLocations: [
+        { id: 'hawkesbury_basin', name: 'Hawkesbury-Nepean River Flood Basin', sensor: 'Hydro Inundation Gauge (drain_hawkesbury)', tier: 'Critical River Floodplain' },
+        { id: 'ausgrid_syd', name: 'Ausgrid Sydney SCADA Substation', sensor: 'HV Transmission Link (scada_ausgrid_syd)', tier: 'Coastal Power Distribution' },
+        { id: 'rpa_sydney', name: 'Royal Prince Alfred Hospital ER Trauma', sensor: 'Emergency Admissions (er_rpa_sydney)', tier: 'Major Referral Center' },
+        { id: 'm4_motorway', name: 'M4 Western Motorway Corridor', sensor: 'Vehicle Speed Loop (traffic_m4_motorway)', tier: 'Key Western Evacuation Arterial' }
+      ]
     }
   };
 
-  const selectLocation = document.getElementById('selectLocation');
+    const selectLocation = document.getElementById('selectLocation');
   const selectSubLocation = document.getElementById('selectSubLocation');
   const activeSubLocName = document.getElementById('activeSubLocName');
   const activeSensorNode = document.getElementById('activeSensorNode');
