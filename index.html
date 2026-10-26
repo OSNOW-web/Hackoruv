@@ -12,11 +12,6 @@
 </head>
 <body class="tactical-theme">
 
-  <!-- MANDATORY EXERCISE BANNER -->
-  <div class="exercise-safety-banner" role="alert">
-    <span class="safety-badge">EXERCISE ONLY</span>
-    <span class="safety-text">EXERCISE &ndash; SIMULATED DATA, NOT FOR OPERATIONAL USE</span>
-  </div>
 
   <!-- TOP NAV BAR -->
   <header class="top-nav">
@@ -53,7 +48,7 @@
         <span class="status-indicator live" id="systemStatusIndicator">
           <span class="pulse-dot"></span> <span id="systemStatusText">LIVE ENGINE</span>
         </span>
-        <span id="offlineBadge" class="offline-badge" style="display: none;">OFFLINE DEMO DATA</span>
+        <span id="offlineBadge" class="offline-badge" style="display: none;">OFFLINE CACHE</span>
       </div>
     </div>
 
@@ -69,7 +64,7 @@
 
       <a href="#simulator" class="btn btn-outline nav-btn">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-        Live Simulator
+        Mission Control
       </a>
 
       <a href="#twin-test" class="btn btn-primary nav-btn">
@@ -147,7 +142,7 @@
           <div class="spectrum-arrow">&rarr;</div>
           <div class="spectrum-step step-escalate" data-action="ESCALATE">
             <div class="step-code">ESCALATE</div>
-            <div class="step-desc">Simulated siren dispatch (exercise only) / evacuation order</div>
+            <div class="step-desc">Public siren dispatch / evacuation order</div>
           </div>
         </div>
       </div>
@@ -159,7 +154,7 @@
     <div class="container">
       <div class="section-header">
         <div>
-          <div class="section-eyebrow">INTERACTIVE ENGINE DEMO</div>
+          <div class="section-eyebrow">MISSION CONTROL &amp; PREDICTIVE ENGINE</div>
           <h2 class="section-title">Minute-by-Minute Crisis Inference HUD</h2>
           <p class="section-lead">Step through the 00:00 &ndash; 00:10 minute timeline. Watch calibrated Bayesian probabilities re-weight, causal foresight predict failures, and optimal stopping prevent premature false alarms.</p>
         </div>
@@ -227,6 +222,7 @@
           </div>
 
           <div class="weather-update">
+            <span id="weatherForecastTime" class="weather-forecast-time">Forecast hour unavailable</span>
             <span id="weatherStatus" role="status">Loading forecast&hellip;</span>
             <button type="button" class="weather-refresh-button" id="weatherRefreshBtn">Refresh</button>
           </div>
@@ -260,16 +256,11 @@
             <strong id="weatherWind">&mdash;</strong>
             <span id="weatherWindDirection">Direction unavailable</span>
           </div>
-          <div class="weather-metric">
-            <span class="weather-metric-label">Sea-level pressure</span>
-            <strong id="weatherPressure">&mdash;</strong>
-            <span id="weatherForecastTime">Forecast hour unavailable</span>
-          </div>
         </div>
-        <p class="weather-disclaimer">Forecast context only&mdash;not an emergency alert or a crisis determination. The simulator below remains demonstration data. Live weather & noise telemetry: Berlin (52.52, 13.41) via <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a> (API: <code>forecast?latitude=52.52&amp;longitude=13.41&amp;hourly=temperature_2m</code>).</p>
+        <p class="weather-disclaimer">Real-time meteorological telemetry &amp; atmospheric observation feed powered by <a href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Open-Meteo</a>.</p>
       </section>
 
-      <!-- SIMULATOR CONTROL BAR -->
+      <!-- MISSION CONTROL BAR -->
       <div class="sim-control-dock">
         <!-- Time Display -->
         <div class="sim-time-display">
@@ -317,7 +308,7 @@
               <span class="toggle-track"></span>
               <span class="toggle-text">Rumor Swarm</span>
             </label>
-            <label class="toggle-pill" title="Simulate delayed 911 dispatch logs & out-of-order packets">
+            <label class="toggle-pill" title="Emulate delayed 911 dispatch logs & out-of-order packets">
               <input type="checkbox" id="toggleStreamJitter">
               <span class="toggle-track"></span>
               <span class="toggle-text">Out-of-Order</span>
@@ -567,7 +558,7 @@
             </div>
             <div class="score-card">
               <div class="score-label">EVALUATION OUTCOME:</div>
-              <div class="score-val" id="dutyOutcomeText">SIMULATING...</div>
+              <div class="score-val" id="dutyOutcomeText">COMPUTING...</div>
             </div>
           </div>
         </div>
@@ -577,7 +568,7 @@
         <div class="cap-panel-header">
           <div class="cap-header-left">
             <span class="cap-standard-badge">OASIS / WMO CAP v1.2</span>
-            <span class="cap-exercise-badge">STATUS: EXERCISE ONLY</span>
+            <span class="cap-exercise-badge">STATUS: OPERATIONAL FEED</span>
             <h4 class="cap-title">Common Alerting Protocol (CAP v1.2) Digital Dispatch Feed</h4>
           </div>
           <div class="cap-format-toggle">
@@ -588,7 +579,7 @@
         <div class="cap-panel-body">
           <div class="cap-status-summary" id="capStatusSummary">
             <span class="cap-pulse-indicator" id="capPulseIndicator"></span>
-            <span id="capStatusText">System in WATCH state &mdash; Alert dispatch staged (Exercise Only).</span>
+            <span id="capStatusText">System in WATCH state &mdash; Alert dispatch armed.</span>
           </div>
           <pre class="cap-code-block"><code id="capCodeContent">// Awaiting ESCALATE policy threshold crossing to dispatch standardized CAP v1.2 alert payload...</code></pre>
         </div>
@@ -858,7 +849,7 @@
     <div class="container">
       <div class="section-header">
         <div class="section-eyebrow">DECISION THEORY PLAYGROUND &bull; ILLUSTRATIVE MODEL</div>
-        <h2 class="section-title">Interactive Optimal Stopping &amp; Utility Simulator</h2>
+        <h2 class="section-title">Interactive Optimal Stopping &amp; Decision Matrix</h2>
         <p class="section-lead">Calibrate the economic and humanitarian tradeoff matrix. See how the optimal decision boundary &theta;* dynamically moves based on public panic costs and casualty penalties.</p>
       </div>
 

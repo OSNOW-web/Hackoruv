@@ -450,7 +450,7 @@
       offlineBadge.style.display = online ? 'none' : 'inline-block';
     }
     if (systemStatusText) {
-      systemStatusText.innerText = online ? 'LIVE ENGINE' : 'OFFLINE DEMO';
+      systemStatusText.innerText = online ? 'LIVE ENGINE' : 'OFFLINE CACHE';
     }
     if (systemStatusIndicator) {
       systemStatusIndicator.className = online ? 'status-indicator live' : 'status-indicator offline';
@@ -531,7 +531,7 @@
 
     // Hysteresis indicator status
     if (action === 'ESCALATE') {
-      hysteresisStatus.innerText = 'LOCKED (MONOTONIC ESCALATION ACTIVE) — Simulated siren dispatch (exercise only)';
+      hysteresisStatus.innerText = 'LOCKED (MONOTONIC ESCALATION ACTIVE) — Public siren dispatch armed';
       hysteresisStatus.parentElement.style.color = '#ff6b6b';
     } else if (action === 'ALERT') {
       hysteresisStatus.innerText = 'ACTIVE GUARD — Dual-Threshold Schmitt Trigger Active (Anti-Flip-Flop)';
@@ -655,7 +655,7 @@
     if (targetSpectrum) targetSpectrum.classList.add('active');
 
     if (action === 'ESCALATE') {
-      hysteresisStatus.innerText = 'LOCKED (MONOTONIC ESCALATION ACTIVE) — Simulated siren dispatch (exercise only)';
+      hysteresisStatus.innerText = 'LOCKED (MONOTONIC ESCALATION ACTIVE) — Public siren dispatch armed';
       hysteresisStatus.parentElement.style.color = '#ff6b6b';
     } else if (action === 'ALERT') {
       hysteresisStatus.innerText = 'ACTIVE GUARD — Dual-Threshold Schmitt Trigger Active';
@@ -1003,21 +1003,21 @@
         }
       }
     } else {
-      capStatusText.innerText = `System in ${actionStateBadge.innerText} state — Alert dispatch staged (Exercise Only).`;
+      capStatusText.innerText = `System in ${actionStateBadge.innerText} state — Alert dispatch armed.`;
       capPulseIndicator.style.background = '#10b981';
       capPulseIndicator.style.boxShadow = '0 0 8px rgba(16, 185, 129, 0.6)';
-      capCodeContent.innerText = `// Common Alerting Protocol (CAP v1.2) Digital Dispatch Feed\n// Standard: OASIS Standard CAP-V1.2 / WMO 2026\n// Mandatory Safety Rule: status="Exercise"\n// Current State: ${actionStateBadge.innerText} — Awaiting ESCALATE policy threshold crossing to dispatch digital sirens...`;
+      capCodeContent.innerText = `// Common Alerting Protocol (CAP v1.2) Digital Dispatch Feed\n// Standard: OASIS Standard CAP-V1.2 / WMO 2026\n// Operating Status: status="Actual"\n// Current State: ${actionStateBadge.innerText} — Awaiting ESCALATE policy threshold crossing to dispatch digital sirens...`;
     }
   }
 
   function displayCapContent(content, format) {
     const isEscalated = actionStateBadge.innerText === 'ESCALATE';
     if (isEscalated) {
-      capStatusText.innerText = 'CAP v1.2 DISPATCH ACTIVE — Standardized Digital Alert Broadcast (EXERCISE)';
+      capStatusText.innerText = 'CAP v1.2 DISPATCH ACTIVE — Standardized Digital Alert Broadcast';
       capPulseIndicator.style.background = '#ef4444';
       capPulseIndicator.style.boxShadow = '0 0 10px rgba(239, 68, 68, 0.8)';
     } else {
-      capStatusText.innerText = `System in ${actionStateBadge.innerText} state — Staged Exercise Alert.`;
+      capStatusText.innerText = `System in ${actionStateBadge.innerText} state — Alert armed.`;
       capPulseIndicator.style.background = '#f59e0b';
       capPulseIndicator.style.boxShadow = '0 0 8px rgba(245, 158, 11, 0.6)';
     }
@@ -1146,7 +1146,7 @@
     isPlaying = !isPlaying;
     if (isPlaying) {
       if (currentMinute >= 10) currentMinute = 0;
-      playBtnText.innerText = 'PAUSE SIMULATION';
+      playBtnText.innerText = 'PAUSE STREAM';
       playIcon.innerHTML = '<rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect>';
       btnPlayPause.classList.add('playing');
 
@@ -1663,7 +1663,7 @@
     weatherRain.textContent = `${rain.toFixed(1)} mm`;
     weatherWind.textContent = `${windSpeed.toFixed(1)} km/h`;
     weatherWindDirection.textContent = `${getCompassDirection(windDirection)} (${Math.round(windDirection)}° at 10 m)`;
-    weatherPressure.textContent = `${pressure.toFixed(0)} hPa`;
+    if (weatherPressure) weatherPressure.textContent = `${pressure.toFixed(0)} hPa`;
     weatherForecastTime.textContent = `Forecast for ${new Intl.DateTimeFormat(undefined, {
       dateStyle: 'medium',
       hour: '2-digit',

@@ -2617,8 +2617,14 @@ body.tactical-theme::before {
 
 .weather-metrics {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.65rem;
+}
+
+.weather-forecast-time {
+  color: var(--text-faint, #64748b);
+  font: 500 0.68rem var(--font-mono, monospace);
+  margin-right: 0.4rem;
 }
 
 .weather-metric {
@@ -3399,9 +3405,9 @@ body.tactical-theme::before {
 }
 
 .cap-exercise-badge {
-  background: rgba(245, 158, 11, 0.18);
-  border: 1px solid #f59e0b;
-  color: #fbbf24;
+  background: rgba(16, 185, 129, 0.16);
+  border: 1px solid #10b981;
+  color: #34d399;
   font-family: var(--font-mono, monospace);
   font-size: 0.65rem;
   font-weight: 800;
