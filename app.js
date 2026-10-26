@@ -1321,13 +1321,6 @@
       forecast_days: '3'
     });
 
-    // Support custom user API key if configured
-    const urlParams = new URLSearchParams(window.location.search);
-    const userApiKey = urlParams.get('weather_key') || window.OPEN_METEO_API_KEY || localStorage.getItem('OPEN_METEO_API_KEY') || '';
-    if (userApiKey) {
-      params.set('apikey', userApiKey);
-    }
-
     weatherRefreshBtn.disabled = true;
     weatherStatus.textContent = 'Loading forecast…';
     const controller = new AbortController();
@@ -1642,14 +1635,3 @@
 
 })();
 
-  // Global helper to set Open-Meteo API key if provided
-  window.setOpenMeteoKey = function(key) {
-    if (key) {
-      localStorage.setItem('OPEN_METEO_API_KEY', key);
-      window.OPEN_METEO_API_KEY = key;
-    } else {
-      localStorage.removeItem('OPEN_METEO_API_KEY');
-      delete window.OPEN_METEO_API_KEY;
-    }
-    loadWeatherForecast();
-  };
