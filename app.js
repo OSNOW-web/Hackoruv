@@ -1266,14 +1266,18 @@
     return directions[Math.round(degrees / 45) % directions.length];
   }
 
+  // Weather API Configuration: https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&hourly=temperature_2m
+  const WEATHER_LAT = '52.52';
+  const WEATHER_LON = '13.41';
+  const WEATHER_TIMEZONE = 'Europe/Berlin';
+
   function renderWeatherForecast(data) {
     const hourly = data.hourly;
-    const requiredFields = ['time', 'temperature_2m', 'rain', 'wind_speed_120m', 'pressure_msl', 'weather_code', 'wind_direction_10m'];
-    if (!hourly || requiredFields.some((field) => !Array.isArray(hourly[field]))) {
+    if (!hourly || !Array.isArray(hourly.time) || !Array.isArray(hourly.temperature_2m)) {
       throw new Error('Weather provider returned an unexpected forecast format.');
     }
 
-    const sampleCount = Math.min(...requiredFields.map((field) => hourly[field].length));
+    const sampleCount = hourly.time.length;
     if (sampleCount === 0) return;
 
     const now = Date.now() / 1000;
@@ -1287,8 +1291,14 @@
       }
     }
 
-    const values = requiredFields.slice(1).map((field) => Number(hourly[field][forecastIndex]));
-    const [temperature, rain, windSpeed, pressure, weatherCode, windDirection] = values;
+    const temperature = Number(hourly.temperature_2m[forecastIndex]);
+    const rain = Array.isArray(hourly.rain) ? Number(hourly.rain[forecastIndex]) : 0.0;
+    const windSpeed = Array.isArray(hourly.wind_speed_120m) 
+      ? Number(hourly.wind_speed_120m[forecastIndex]) 
+      : (Array.isArray(hourly.wind_speed_10m) ? Number(hourly.wind_speed_10m[forecastIndex]) : 12.0);
+    const pressure = Array.isArray(hourly.pressure_msl) ? Number(hourly.pressure_msl[forecastIndex]) : 1013;
+    const weatherCode = Array.isArray(hourly.weather_code) ? Number(hourly.weather_code[forecastIndex]) : 0;
+    const windDirection = Array.isArray(hourly.wind_direction_10m) ? Number(hourly.wind_direction_10m[forecastIndex]) : 0;
     const forecastTimestamp = Number(hourly.time[forecastIndex]);
 
     weatherTemperature.textContent = `${temperature.toFixed(1)} °C`;
@@ -1301,22 +1311,17 @@
       dateStyle: 'medium',
       hour: '2-digit',
       minute: '2-digit',
-      timeZone: 'Asia/Kolkata'
+      timeZone: WEATHER_TIMEZONE
     }).format(new Date(forecastTimestamp * 1000))}`;
   }
-
-  // Nagpur, India Coordinates (21.1458 N, 79.0882 E)
-  const NAGPUR_LAT = '21.1458';
-  const NAGPUR_LON = '79.0882';
-  const NAGPUR_TIMEZONE = 'Asia/Kolkata';
 
   async function loadWeatherForecast() {
     if (weatherRefreshBtn.disabled) return;
     const params = new URLSearchParams({
-      latitude: NAGPUR_LAT,
-      longitude: NAGPUR_LON,
+      latitude: WEATHER_LAT,
+      longitude: WEATHER_LON,
       hourly: 'temperature_2m,rain,wind_speed_120m,pressure_msl,weather_code,wind_direction_10m',
-      timezone: NAGPUR_TIMEZONE,
+      timezone: WEATHER_TIMEZONE,
       timeformat: 'unixtime',
       forecast_days: '3'
     });
