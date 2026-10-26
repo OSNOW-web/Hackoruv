@@ -531,7 +531,7 @@
 
     // Hysteresis indicator status
     if (action === 'ESCALATE') {
-      hysteresisStatus.innerText = 'LOCKED (MONOTONIC ESCALATION ACTIVE) — Irreversible Public Sirens Dispatched';
+      hysteresisStatus.innerText = 'LOCKED (MONOTONIC ESCALATION ACTIVE) — Simulated siren dispatch (exercise only)';
       hysteresisStatus.parentElement.style.color = '#ff6b6b';
     } else if (action === 'ALERT') {
       hysteresisStatus.innerText = 'ACTIVE GUARD — Dual-Threshold Schmitt Trigger Active (Anti-Flip-Flop)';
@@ -541,9 +541,40 @@
       hysteresisStatus.parentElement.style.color = '#06b6d4';
     }
 
+    // Dynamic Shiryaev Crossing Threshold calculation
+    const policyThresholdPill = document.getElementById('policyThresholdPill');
+    const fatigue = payload.fatigue_level || 0.0;
+    const lead = 1.0 + 0.15 * Math.max(0, currentMinute);
+    const W = 1.0 + 2.0 * fatigue;
+    const pAlertEsc = (19.0 * W) / (10.0 * lead + 19.0 * W);
+    const pAlertEscPct = (pAlertEsc * 100).toFixed(1);
+
+    if (policyThresholdPill) {
+      if (action === 'ESCALATE') {
+        policyThresholdPill.className = 'threshold-pill escalate-active';
+        policyThresholdPill.innerHTML = `Active Gate: <strong>P(H₃) &ge; ${pAlertEscPct}%</strong> <span class="sub-thresh">(Lead ×${lead.toFixed(2)}, Hysteresis Locked)</span>`;
+      } else if (action === 'ALERT') {
+        const numAlert = 6.0 * W - 1.0;
+        const denAlert = 25.0 * lead + 6.0 * W - 1.0;
+        const pPrepAlert = denAlert > 0 ? numAlert / denAlert : 0.17;
+        policyThresholdPill.className = 'threshold-pill';
+        policyThresholdPill.innerHTML = `Gate: <strong>P(H₃) &ge; ${(pPrepAlert * 100).toFixed(1)}%</strong> <span class="sub-thresh">(Base 17.0%, ESC at ${pAlertEscPct}%)</span>`;
+      } else if (action === 'PREPARE') {
+        const pWatchPrep = 1.0 / (60.0 * lead + 1.0);
+        policyThresholdPill.className = 'threshold-pill';
+        policyThresholdPill.innerHTML = `Gate: <strong>P(H₃) &ge; ${(pWatchPrep * 100).toFixed(1)}%</strong> <span class="sub-thresh">(Escalate at ${pAlertEscPct}%)</span>`;
+      } else {
+        policyThresholdPill.className = 'threshold-pill';
+        policyThresholdPill.innerHTML = `Baseline Threshold: <strong>P(H₃) &ge; 65.5%</strong> <span class="sub-thresh">(t=0 Static)</span>`;
+      }
+    }
+
+    if (valThreshold) {
+      valThreshold.innerText = `Adjusted Threshold: ${pAlertEscPct}% (Base 65.5%)`;
+    }
+
     // Tradeoff meters
     const damagePct = Math.round(pCrisis * 100);
-    const fatigue = payload.fatigue_level || 0.0;
     const cryWolfAvoidance = Math.max(5, Math.min(95, Math.round((1 - fatigue) * 100)));
     gaugeDamageAvoided.style.width = `${damagePct}%`;
     gaugeCryWolf.style.width = `${cryWolfAvoidance}%`;
@@ -624,7 +655,7 @@
     if (targetSpectrum) targetSpectrum.classList.add('active');
 
     if (action === 'ESCALATE') {
-      hysteresisStatus.innerText = 'LOCKED (MONOTONIC ESCALATION ACTIVE) — Irreversible Public Sirens Dispatched';
+      hysteresisStatus.innerText = 'LOCKED (MONOTONIC ESCALATION ACTIVE) — Simulated siren dispatch (exercise only)';
       hysteresisStatus.parentElement.style.color = '#ff6b6b';
     } else if (action === 'ALERT') {
       hysteresisStatus.innerText = 'ACTIVE GUARD — Dual-Threshold Schmitt Trigger Active';
@@ -632,6 +663,31 @@
     } else {
       hysteresisStatus.innerText = 'NORMAL WATCH / STAGING BUFFER';
       hysteresisStatus.parentElement.style.color = '#06b6d4';
+    }
+
+    const policyThresholdPill = document.getElementById('policyThresholdPill');
+    const lead = 1.0 + 0.15 * Math.max(0, currentMinute);
+    const pAlertEsc = 19.0 / (10.0 * lead + 19.0);
+    const pAlertEscPct = (pAlertEsc * 100).toFixed(1);
+
+    if (policyThresholdPill) {
+      if (action === 'ESCALATE') {
+        policyThresholdPill.className = 'threshold-pill escalate-active';
+        policyThresholdPill.innerHTML = `Active Gate: <strong>P(H₃) &ge; ${pAlertEscPct}%</strong> <span class="sub-thresh">(Lead ×${lead.toFixed(2)}, Hysteresis Locked)</span>`;
+      } else if (action === 'ALERT') {
+        policyThresholdPill.className = 'threshold-pill';
+        policyThresholdPill.innerHTML = `Gate: <strong>P(H₃) &ge; 17.0%</strong> <span class="sub-thresh">(Escalate at ${pAlertEscPct}%)</span>`;
+      } else if (action === 'PREPARE') {
+        policyThresholdPill.className = 'threshold-pill';
+        policyThresholdPill.innerHTML = `Gate: <strong>P(H₃) &ge; 1.6%</strong> <span class="sub-thresh">(Escalate at ${pAlertEscPct}%)</span>`;
+      } else {
+        policyThresholdPill.className = 'threshold-pill';
+        policyThresholdPill.innerHTML = `Baseline Threshold: <strong>P(H₃) &ge; 65.5%</strong> <span class="sub-thresh">(t=0 Static)</span>`;
+      }
+    }
+
+    if (valThreshold) {
+      valThreshold.innerText = `Adjusted Threshold: ${pAlertEscPct}% (Base 65.5%)`;
     }
 
     const damagePct = Math.round(pCrisis * 100);
@@ -846,7 +902,14 @@
     if (payload.top_drivers && payload.top_drivers.length > 0) {
       html += `<p class="attr-step"><span class="time-pill">DRIVERS</span> `;
       payload.top_drivers.forEach(d => {
-        html += `<span class="driver-tag"><strong>${d.source || d.factor}:</strong> LLR = ${typeof d.weight === 'number' ? (d.weight > 0 ? '+' : '') + d.weight.toFixed(2) : d.weight}</span> `;
+        const rawVal = (d.llr !== undefined && d.llr !== null) ? d.llr : ((d.weight !== undefined && d.weight !== null) ? d.weight : null);
+        let llrStr = 'n/a';
+        if (typeof rawVal === 'number' && !isNaN(rawVal)) {
+          llrStr = (rawVal > 0 ? '+' : '') + rawVal.toFixed(2);
+        } else if (rawVal !== null && rawVal !== undefined) {
+          llrStr = String(rawVal);
+        }
+        html += `<span class="driver-tag"><strong>${d.source || d.factor}:</strong> LLR = ${llrStr}</span> `;
       });
       html += `</p>`;
     }

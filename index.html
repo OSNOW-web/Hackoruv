@@ -60,6 +60,12 @@
 </head>
 <body class="tactical-theme">
 
+  <!-- MANDATORY EXERCISE BANNER -->
+  <div class="exercise-safety-banner" role="alert">
+    <span class="safety-badge">EXERCISE ONLY</span>
+    <span class="safety-text">EXERCISE &ndash; SIMULATED DATA, NOT FOR OPERATIONAL USE</span>
+  </div>
+
   <!-- TOP NAV BAR -->
   <header class="top-nav">
     <div class="nav-brand">
@@ -197,7 +203,7 @@
           <div class="spectrum-arrow">&rarr;</div>
           <div class="spectrum-step step-escalate" data-action="ESCALATE">
             <div class="step-code">ESCALATE</div>
-            <div class="step-desc">Public siren / mass evacuation order</div>
+            <div class="step-desc">Simulated siren dispatch (exercise only) / evacuation order</div>
           </div>
         </div>
       </div>
@@ -445,7 +451,10 @@
             <div class="action-card-top">
               <div class="action-subtext">CURRENT CALIBRATED POLICY</div>
               <div class="action-state-display" id="actionStateDisplay">
-                <span class="state-badge watch" id="actionStateBadge">WATCH</span>
+                <div class="state-badge-row">
+                  <span class="state-badge watch" id="actionStateBadge">WATCH</span>
+                  <span class="threshold-pill" id="policyThresholdPill">Threshold: P(H₃) &ge; 65.5%</span>
+                </div>
                 <span class="state-rationale" id="actionRationale">Cost of premature escalation (\$1.8M) exceeds expected damage. Maintain surveillance.</span>
               </div>
             </div>

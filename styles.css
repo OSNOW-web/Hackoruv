@@ -1,4 +1,35 @@
 /* ==========================================================================
+   SAFETY EXERCISE BANNER
+   ========================================================================== */
+.exercise-safety-banner {
+  background: #fef3c7;
+  color: #92400e;
+  border-bottom: 2px solid #f59e0b;
+  padding: 0.45rem 1rem;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 101;
+}
+
+.exercise-safety-banner .safety-badge {
+  background: #dc2626;
+  color: #ffffff;
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+/* ==========================================================================
    THE FIRST 10 MINUTES — Decent, Clean & Professional Light / White Theme
    ========================================================================== */
 
@@ -2886,8 +2917,46 @@ body.tactical-theme::before {
 
 .action-state-display {
   display: flex;
-  align-items: flex-start;
+  flex-direction: column;
   gap: 0.55rem;
+}
+
+.state-badge-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.threshold-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.66rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+}
+
+.threshold-pill.escalate-active {
+  background: #fef2f2;
+  color: #b91c1c;
+  border-color: #fca5a5;
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.15);
+}
+
+.threshold-pill .sub-thresh {
+  font-size: 0.60rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.threshold-pill.escalate-active .sub-thresh {
+  color: #991b1b;
 }
 
 .state-badge {
