@@ -20,7 +20,7 @@ try {
         $response = $context.Response
 
         $urlPath = $request.Url.LocalPath.TrimStart('/')
-        if ([string]::IsNullOrEmpty($urlPath)) { $urlPath = "login.html" }
+        if ([string]::IsNullOrEmpty($urlPath)) { $urlPath = "index.html" }
         $filePath = Join-Path $folder $urlPath
 
         if (Test-Path $filePath -PathType Leaf) {
