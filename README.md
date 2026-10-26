@@ -44,7 +44,6 @@ No package installation or build step is required. The Supabase JavaScript clien
 ### Configure Supabase Auth
 
 1. Create a Supabase project and enable Email and Google authentication. For Google, configure the OAuth client credentials in the Supabase Google provider settings.
-2. Confirm the Supabase **Project URL** in [`supabase-config.js`](./supabase-config.js) matches **Project Settings → API** for your project.
 3. Confirm the publishable/anon key in that file belongs to the same project. A publishable key is intended for browser use; never put a service-role key in frontend code.
 4. In Supabase **Authentication → URL Configuration**, set the local Site URL to `http://localhost:8085` and add `http://localhost:8085/index.html` to the allowed redirect URLs (also add your exact deployed `index.html` URL). The app's Google sign-in redirect must be allowed.
 5. In Google Cloud, the OAuth client **Authorized redirect URI** must point to the Supabase callback URL shown in Supabase's Google provider settings, typically `https://<project-ref>.supabase.co/auth/v1/callback`. This is different from the app redirect URL.
@@ -80,12 +79,7 @@ The identical prefix is intended to illustrate why early signals can be ambiguou
 | [`index.html`](./index.html) | Main dashboard, simulator, benchmark sections, and decision-theory playground |
 | [`styles.css`](./styles.css) | Main application styling, including the responsive crisis inference HUD |
 | [`app.js`](./app.js) | Scenario data, playback, simulated inference displays, and interactions |
-| [`login.html`](./login.html) | Supabase email and Google sign-in screen |
-| [`login.css`](./login.css) | Sign-in screen styles |
-| [`login.js`](./login.js) | Supabase email and Google sign-in flows |
-| [`register.html`](./register.html) | Student account registration page |
-| [`register.js`](./register.js) | Creates student accounts through Supabase Auth |
-| [`supabase-config.js`](./supabase-config.js) | Supabase project URL, publishable key, and auth client |
+| [pi.js](./api.js) | FastAPI integration layer for live Bayesian inference and SSE streaming |
 | [`start.bat`](./start.bat) | Starts the local server on Windows |
 | [`server.ps1`](./server.ps1) | Lightweight local static web server |
 
