@@ -552,7 +552,7 @@
     if (policyThresholdPill) {
       if (action === 'ESCALATE') {
         policyThresholdPill.className = 'threshold-pill escalate-active';
-        policyThresholdPill.innerHTML = `Active Gate: <strong>P(H₃) &ge; ${pAlertEscPct}%</strong> <span class="sub-thresh">(Lead ×${lead.toFixed(2)}, Hysteresis Locked)</span>`;
+        policyThresholdPill.innerHTML = `Active Gate: <strong>P(H₃) &ge; ${pAlertEscPct}%</strong> <span class="sub-thresh">(Lead-Time ×${lead.toFixed(2)}, Base: 65.5%, Hysteresis Locked)</span>`;
       } else if (action === 'ALERT') {
         const numAlert = 6.0 * W - 1.0;
         const denAlert = 25.0 * lead + 6.0 * W - 1.0;
@@ -570,7 +570,7 @@
     }
 
     if (valThreshold) {
-      valThreshold.innerText = `Adjusted Threshold: ${pAlertEscPct}% (Base 65.5%)`;
+      valThreshold.innerText = `Adjusted Threshold: ${pAlertEscPct}% (Base: 65.5%, Lead-Time ×${lead.toFixed(2)})`;
     }
 
     // Tradeoff meters
@@ -673,7 +673,7 @@
     if (policyThresholdPill) {
       if (action === 'ESCALATE') {
         policyThresholdPill.className = 'threshold-pill escalate-active';
-        policyThresholdPill.innerHTML = `Active Gate: <strong>P(H₃) &ge; ${pAlertEscPct}%</strong> <span class="sub-thresh">(Lead ×${lead.toFixed(2)}, Hysteresis Locked)</span>`;
+        policyThresholdPill.innerHTML = `Active Gate: <strong>P(H₃) &ge; ${pAlertEscPct}%</strong> <span class="sub-thresh">(Lead-Time ×${lead.toFixed(2)}, Base: 65.5%, Hysteresis Locked)</span>`;
       } else if (action === 'ALERT') {
         policyThresholdPill.className = 'threshold-pill';
         policyThresholdPill.innerHTML = `Gate: <strong>P(H₃) &ge; 17.0%</strong> <span class="sub-thresh">(Escalate at ${pAlertEscPct}%)</span>`;
@@ -687,7 +687,7 @@
     }
 
     if (valThreshold) {
-      valThreshold.innerText = `Adjusted Threshold: ${pAlertEscPct}% (Base 65.5%)`;
+      valThreshold.innerText = `Adjusted Threshold: ${pAlertEscPct}% (Base: 65.5%, Lead-Time ×${lead.toFixed(2)})`;
     }
 
     const damagePct = Math.round(pCrisis * 100);
@@ -902,14 +902,26 @@
     if (payload.top_drivers && payload.top_drivers.length > 0) {
       html += `<p class="attr-step"><span class="time-pill">DRIVERS</span> `;
       payload.top_drivers.forEach(d => {
-        const rawVal = (d.llr !== undefined && d.llr !== null) ? d.llr : ((d.weight !== undefined && d.weight !== null) ? d.weight : null);
-        let llrStr = 'n/a';
-        if (typeof rawVal === 'number' && !isNaN(rawVal)) {
-          llrStr = (rawVal > 0 ? '+' : '') + rawVal.toFixed(2);
-        } else if (rawVal !== null && rawVal !== undefined) {
-          llrStr = String(rawVal);
+        let rawVal = null;
+        if (d.llr !== undefined && d.llr !== null && d.llr !== 'undefined' && d.llr !== 'null') {
+          rawVal = d.llr;
+        } else if (d.weight !== undefined && d.weight !== null && d.weight !== 'undefined' && d.weight !== 'null') {
+          rawVal = d.weight;
+        } else if (d.value !== undefined && d.value !== null && d.value !== 'undefined' && d.value !== 'null') {
+          rawVal = d.value;
         }
-        html += `<span class="driver-tag"><strong>${d.source || d.factor}:</strong> LLR = ${llrStr}</span> `;
+
+        let llrStr = 'n/a';
+        if (rawVal !== null && rawVal !== undefined) {
+          const num = Number(rawVal);
+          if (!isNaN(num) && isFinite(num)) {
+            llrStr = (num > 0 ? '+' : '') + num.toFixed(2);
+          } else if (rawVal !== 'undefined' && rawVal !== 'null' && String(rawVal).trim() !== '') {
+            llrStr = String(rawVal);
+          }
+        }
+        const sourceLabel = d.source || d.factor || d.kind || 'dispatch_logs';
+        html += `<span class="driver-tag"><strong>${sourceLabel}:</strong> LLR = ${llrStr}</span> `;
       });
       html += `</p>`;
     }
@@ -1289,20 +1301,32 @@
       dateStyle: 'medium',
       hour: '2-digit',
       minute: '2-digit',
-      timeZone: 'Europe/Berlin'
+      timeZone: 'Asia/Kolkata'
     }).format(new Date(forecastTimestamp * 1000))}`;
   }
+
+  // Nagpur, India Coordinates (21.1458 N, 79.0882 E)
+  const NAGPUR_LAT = '21.1458';
+  const NAGPUR_LON = '79.0882';
+  const NAGPUR_TIMEZONE = 'Asia/Kolkata';
 
   async function loadWeatherForecast() {
     if (weatherRefreshBtn.disabled) return;
     const params = new URLSearchParams({
-      latitude: '52.52',
-      longitude: '13.41',
+      latitude: NAGPUR_LAT,
+      longitude: NAGPUR_LON,
       hourly: 'temperature_2m,rain,wind_speed_120m,pressure_msl,weather_code,wind_direction_10m',
-      timezone: 'GMT',
+      timezone: NAGPUR_TIMEZONE,
       timeformat: 'unixtime',
       forecast_days: '3'
     });
+
+    // Support custom user API key if configured
+    const urlParams = new URLSearchParams(window.location.search);
+    const userApiKey = urlParams.get('weather_key') || window.OPEN_METEO_API_KEY || localStorage.getItem('OPEN_METEO_API_KEY') || '';
+    if (userApiKey) {
+      params.set('apikey', userApiKey);
+    }
 
     weatherRefreshBtn.disabled = true;
     weatherStatus.textContent = 'Loading forecast…';
@@ -1617,3 +1641,15 @@
   }
 
 })();
+
+  // Global helper to set Open-Meteo API key if provided
+  window.setOpenMeteoKey = function(key) {
+    if (key) {
+      localStorage.setItem('OPEN_METEO_API_KEY', key);
+      window.OPEN_METEO_API_KEY = key;
+    } else {
+      localStorage.removeItem('OPEN_METEO_API_KEY');
+      delete window.OPEN_METEO_API_KEY;
+    }
+    loadWeatherForecast();
+  };
