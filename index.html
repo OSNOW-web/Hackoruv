@@ -177,15 +177,52 @@
 
       <section class="weather-panel" aria-labelledby="weatherTitle" aria-live="polite">
         <div class="weather-panel-heading">
-          <div>
-            <div class="section-eyebrow">LIVE WEATHER FORECAST</div>
-            <h3 id="weatherTitle">Berlin <span>(52.52, 13.41)</span></h3>
+          <div class="weather-heading-info">
+            <div class="section-eyebrow">LIVE WEATHER FORECAST &amp; SENSOR TELEMETRY</div>
+            <h3 id="weatherTitle">Berlin &mdash; Mitte <span>(52.52&deg; N, 13.41&deg; E)</span></h3>
           </div>
+
+          <!-- Interactive Location & Sub-Location Picker -->
+          <div class="location-picker-dock">
+            <div class="location-select-wrap">
+              <label for="selectLocation" class="loc-label">LOCATION (DISTRICT):</label>
+              <select id="selectLocation" class="tactical-select">
+                <option value="berlin_mitte" selected>Berlin &mdash; Mitte / Central</option>
+                <option value="berlin_spandau">Berlin &mdash; Spandau / West</option>
+                <option value="berlin_kreuzberg">Berlin &mdash; Friedrichshain-Kreuzberg</option>
+                <option value="berlin_charlottenburg">Berlin &mdash; Charlottenburg</option>
+                <option value="berlin_tempelhof">Berlin &mdash; Tempelhof-Sch&ouml;neberg</option>
+                <option value="berlin_pankow">Berlin &mdash; Pankow / North</option>
+                <option value="berlin_neukoelln">Berlin &mdash; Neuk&ouml;lln / South</option>
+              </select>
+            </div>
+
+            <div class="location-select-wrap">
+              <label for="selectSubLocation" class="loc-label">SUB-LOCATION / CRITICAL SECTOR:</label>
+              <select id="selectSubLocation" class="tactical-select">
+                <!-- Dynamically populated from active district -->
+              </select>
+            </div>
+          </div>
+
           <div class="weather-update">
             <span id="weatherStatus" role="status">Loading forecast&hellip;</span>
             <button type="button" class="weather-refresh-button" id="weatherRefreshBtn">Refresh</button>
           </div>
         </div>
+
+        <!-- Active Sector Sensor Telemetry Strip -->
+        <div class="sector-sensor-strip" id="sectorSensorStrip">
+          <span class="strip-tag">ACTIVE SECTOR TARGET:</span>
+          <span class="strip-val" id="activeSubLocName">River Spree Basin &amp; Alexanderplatz</span>
+          <span class="strip-sep">&bull;</span>
+          <span class="strip-tag">CRITICAL SENSOR NODE:</span>
+          <span class="strip-val highlight-blue" id="activeSensorNode">Hydro Gauge (drain_main_basin)</span>
+          <span class="strip-sep">&bull;</span>
+          <span class="strip-tag">INFRASTRUCTURE TIER:</span>
+          <span class="strip-val highlight-amber" id="activeInfraTier">Tier-1 Urban Flood Drainage</span>
+        </div>
+
         <div class="weather-metrics">
           <div class="weather-metric">
             <span class="weather-metric-label">Temperature</span>

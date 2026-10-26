@@ -1266,10 +1266,149 @@
     return directions[Math.round(degrees / 45) % directions.length];
   }
 
-  // Weather API Configuration: https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&hourly=temperature_2m
-  const WEATHER_LAT = '52.52';
-  const WEATHER_LON = '13.41';
-  const WEATHER_TIMEZONE = 'Europe/Berlin';
+  // --- BERLIN LOCATIONS & SUB-LOCATIONS METROPOLITAN REGISTRY ---
+  const METROPOLITAN_REGIONS = {
+    berlin_mitte: {
+      name: 'Berlin — Mitte / Central',
+      shortName: 'BERLIN — MITTE',
+      lat: '52.5200',
+      lon: '13.4050',
+      timezone: 'Europe/Berlin',
+      pop: '385K POP (8.4M METRO)',
+      subLocations: [
+        { id: 'spree_basin', name: 'River Spree Basin & Alexanderplatz', sensor: 'Hydro Gauge (drain_main_basin)', tier: 'Tier-1 Urban Flood Drainage' },
+        { id: 'scada_07', name: 'SCADA Substation 07 Switchyard', sensor: 'Breaker Telemetry (substation_scada_7)', tier: 'High-Voltage 110kV Grid' },
+        { id: 'charite_er', name: 'Charité Campus Mitte ER Intake', sensor: 'Emergency Admissions (memorial_er)', tier: 'Level-1 Trauma & Critical Care' },
+        { id: 'unter_den_linden', name: 'Unter den Linden / B2 Corridor', sensor: 'Arterial Radar (traffic_arterial_1)', tier: 'Primary Evacuation Route' }
+      ]
+    },
+    berlin_spandau: {
+      name: 'Berlin — Spandau / West',
+      shortName: 'BERLIN — SPANDAU',
+      lat: '52.5344',
+      lon: '13.1975',
+      timezone: 'Europe/Berlin',
+      pop: '245K POP',
+      subLocations: [
+        { id: 'havel_sluice', name: 'Havel River Sluice Gate 4', sensor: 'Ultrasonic Level Sensor (drain_spandau)', tier: 'Weir & Sluice Gate Control' },
+        { id: 'spandau_scada', name: 'Spandau SCADA Switchyard West', sensor: 'Telemetry Intertie (scada_west_12)', tier: 'Primary Power Distribution' },
+        { id: 'vivantes_spandau', name: 'Vivantes Klinikum Spandau ER', sensor: 'Medical Intake Rate (er_spandau)', tier: 'Regional Emergency Care' },
+        { id: 'heerstrasse', name: 'Heerstraße Arterial (B2/B5)', sensor: 'Optical Speed Sensor (traffic_west_2)', tier: 'Western Evacuation Arterial' }
+      ]
+    },
+    berlin_kreuzberg: {
+      name: 'Berlin — Friedrichshain-Kreuzberg',
+      shortName: 'BERLIN — KREUZBERG',
+      lat: '52.4986',
+      lon: '13.4034',
+      timezone: 'Europe/Berlin',
+      pop: '290K POP',
+      subLocations: [
+        { id: 'landwehr_canal', name: 'Landwehr Canal Regulating Gates', sensor: 'Pumping Station Flow (culvert_s4b)', tier: 'Urban Runoff Relief Channel' },
+        { id: 'urban_hospital', name: 'Klinikum Am Urban Trauma ER', sensor: 'Inpatient Surge Monitor (er_urban)', tier: 'Regional Emergency Medical' },
+        { id: 'scada_kreuzberg', name: 'SCADA Intertie Kreuzberg East', sensor: 'Current Transformer (scada_grid_e)', tier: 'District Sub-Grid 6' },
+        { id: 'oberbaum_corridor', name: 'Oberbaumbrücke Traffic Ingestion', sensor: 'Traffic Cam (cam_junction_4)', tier: 'River Crossing Key Route' }
+      ]
+    },
+    berlin_charlottenburg: {
+      name: 'Berlin — Charlottenburg-Wilmersdorf',
+      shortName: 'BERLIN — CHARLOTTENBURG',
+      lat: '52.5160',
+      lon: '13.3040',
+      timezone: 'Europe/Berlin',
+      pop: '343K POP',
+      subLocations: [
+        { id: 'charlottenburg_lock', name: 'Charlottenburg Lock & Canal Gates', sensor: 'Pressure Transducer (drain_basin_west)', tier: 'Canal Level Regulation' },
+        { id: 'drk_westend', name: 'DRK Kliniken Westend Emergency', sensor: 'Triage Queue Telemetry (er_drk)', tier: 'Acute Care & Burn Unit' },
+        { id: 'scada_westend', name: 'SCADA Substation 03 Westend', sensor: 'Breaker Status (scada_sub_3)', tier: 'Municipal Grid Feeder' },
+        { id: 'bismarck_arterial', name: 'Bismarckstraße Trunk Corridor', sensor: 'Magnetic Loop Ingestion (traffic_bism)', tier: 'Primary West Trunk Road' }
+      ]
+    },
+    berlin_tempelhof: {
+      name: 'Berlin — Tempelhof-Schöneberg',
+      shortName: 'BERLIN — TEMPELHOF',
+      lat: '52.4820',
+      lon: '13.3850',
+      timezone: 'Europe/Berlin',
+      pop: '350K POP',
+      subLocations: [
+        { id: 'teltow_basin', name: 'Teltow Canal Retention Basin', sensor: 'Flow Gradient Sensor (drain_teltow)', tier: 'Southern Stormwater Retention' },
+        { id: 'scada_tempelhof', name: 'SCADA Tempelhof Hub', sensor: 'SCADA Remote Terminal Unit (scada_t_hub)', tier: 'Sub-Transmission Intertie' },
+        { id: 'st_joseph_er', name: 'St. Joseph Hospital Pediatric ER', sensor: 'Infection Outbreak Sensor (hosp_cluster)', tier: 'Pediatric & General Trauma' },
+        { id: 'tempelhofer_damm', name: 'Tempelhofer Damm Arterial (B96)', sensor: 'Radar Doppler Tracker (traffic_b96)', tier: 'South Corridor Evacuation' }
+      ]
+    },
+    berlin_pankow: {
+      name: 'Berlin — Pankow / North',
+      shortName: 'BERLIN — PANKOW',
+      lat: '52.5689',
+      lon: '13.4026',
+      timezone: 'Europe/Berlin',
+      pop: '410K POP',
+      subLocations: [
+        { id: 'panke_culvert', name: 'Panke River Floodplain & Culvert', sensor: 'Water Depth Sonar (drain_panke)', tier: 'Northern River Flood Defenses' },
+        { id: 'gateway_trunk_n', name: 'Gateway Trunk North (Cellular & Fiber)', sensor: 'ISP Trunk Gateway (gw_1)', tier: 'Core Sensor Backhaul Trunk' },
+        { id: 'helios_buch', name: 'Helios Klinikum Berlin-Buch', sensor: 'Campus ER Stream (hosp_helios)', tier: 'Northern Special Care Clinic' },
+        { id: 'prenzlauer_allee', name: 'Prenzlauer Promenade Arterial', sensor: 'Loop Vehicle Counter (traffic_prenz)', tier: 'North Corridor Access' }
+      ]
+    },
+    berlin_neukoelln: {
+      name: 'Berlin — Neukölln / South',
+      shortName: 'BERLIN — NEUKÖLLN',
+      lat: '52.4811',
+      lon: '13.4353',
+      timezone: 'Europe/Berlin',
+      pop: '330K POP',
+      subLocations: [
+        { id: 'schifffahrtskanal', name: 'Neuköllner Schifffahrtskanal Basin', sensor: 'Storm Outflow Sensor (drain_neuk)', tier: 'Municipal Overflow Channel' },
+        { id: 'vivantes_neukoelln', name: 'Vivantes Klinikum Neukölln Trauma', sensor: 'Emergency Capacity Feed (er_neuk)', tier: 'Maximal Care Trauma Hub' },
+        { id: 'karl_marx_str', name: 'Karl-Marx-Straße Commercial Arterial', sensor: 'Traffic Ingestion Cam (cam_junction_7)', tier: 'Dense Urban Emergency Route' },
+        { id: 'scada_ring_south', name: 'SCADA South Ring Feeder', sensor: 'Telemetry Remote Unit (scada_south_ring)', tier: 'District Power Distribution' }
+      ]
+    }
+  };
+
+  const selectLocation = document.getElementById('selectLocation');
+  const selectSubLocation = document.getElementById('selectSubLocation');
+  const activeSubLocName = document.getElementById('activeSubLocName');
+  const activeSensorNode = document.getElementById('activeSensorNode');
+  const activeInfraTier = document.getElementById('activeInfraTier');
+
+  function populateSubLocations(locKey, selectedSubId = null) {
+    if (!selectSubLocation) return;
+    const region = METROPOLITAN_REGIONS[locKey] || METROPOLITAN_REGIONS.berlin_mitte;
+    selectSubLocation.innerHTML = '';
+    region.subLocations.forEach((sub, idx) => {
+      const opt = document.createElement('option');
+      opt.value = sub.id;
+      opt.textContent = sub.name;
+      if (selectedSubId ? sub.id === selectedSubId : idx === 0) {
+        opt.selected = true;
+      }
+      selectSubLocation.appendChild(opt);
+    });
+    updateSectorSensorStrip(locKey, selectSubLocation.value);
+  }
+
+  function updateSectorSensorStrip(locKey, subId) {
+    const region = METROPOLITAN_REGIONS[locKey] || METROPOLITAN_REGIONS.berlin_mitte;
+    const sub = region.subLocations.find(s => s.id === subId) || region.subLocations[0];
+    if (activeSubLocName) activeSubLocName.textContent = sub.name;
+    if (activeSensorNode) activeSensorNode.textContent = sub.sensor;
+    if (activeInfraTier) activeInfraTier.textContent = sub.tier;
+
+    // Update Metropolis ticker in top nav
+    const metropolisVal = document.querySelector('.nav-telemetry .telemetry-item .value');
+    if (metropolisVal) {
+      metropolisVal.textContent = `${region.shortName} (${region.pop})`;
+    }
+
+    // Update Weather title with coordinates and sector
+    const weatherTitle = document.getElementById('weatherTitle');
+    if (weatherTitle) {
+      weatherTitle.innerHTML = `${region.name} <span>(${region.lat}&deg; N, ${region.lon}&deg; E)</span>`;
+    }
+  }
 
   function renderWeatherForecast(data) {
     const hourly = data.hourly;
@@ -1301,6 +1440,9 @@
     const windDirection = Array.isArray(hourly.wind_direction_10m) ? Number(hourly.wind_direction_10m[forecastIndex]) : 0;
     const forecastTimestamp = Number(hourly.time[forecastIndex]);
 
+    const locKey = selectLocation?.value || 'berlin_mitte';
+    const region = METROPOLITAN_REGIONS[locKey] || METROPOLITAN_REGIONS.berlin_mitte;
+
     weatherTemperature.textContent = `${temperature.toFixed(1)} °C`;
     weatherDescription.textContent = getWeatherDescription(weatherCode);
     weatherRain.textContent = `${rain.toFixed(1)} mm`;
@@ -1311,17 +1453,20 @@
       dateStyle: 'medium',
       hour: '2-digit',
       minute: '2-digit',
-      timeZone: WEATHER_TIMEZONE
+      timeZone: region.timezone
     }).format(new Date(forecastTimestamp * 1000))}`;
   }
 
   async function loadWeatherForecast() {
     if (weatherRefreshBtn.disabled) return;
+    const locKey = selectLocation?.value || 'berlin_mitte';
+    const region = METROPOLITAN_REGIONS[locKey] || METROPOLITAN_REGIONS.berlin_mitte;
+
     const params = new URLSearchParams({
-      latitude: WEATHER_LAT,
-      longitude: WEATHER_LON,
+      latitude: region.lat,
+      longitude: region.lon,
       hourly: 'temperature_2m,rain,wind_speed_120m,pressure_msl,weather_code,wind_direction_10m',
-      timezone: WEATHER_TIMEZONE,
+      timezone: region.timezone,
       timeformat: 'unixtime',
       forecast_days: '3'
     });
@@ -1625,6 +1770,29 @@
     }
 
     updateSimulationHUD();
+
+    // Setup Berlin Location & Sub-Location selectors
+    const storedLoc = localStorage.getItem('crisissense_selected_location') || 'berlin_mitte';
+    const storedSub = localStorage.getItem('crisissense_selected_sublocation');
+    if (selectLocation) {
+      selectLocation.value = storedLoc;
+      populateSubLocations(storedLoc, storedSub);
+
+      selectLocation.addEventListener('change', () => {
+        const newLoc = selectLocation.value;
+        localStorage.setItem('crisissense_selected_location', newLoc);
+        populateSubLocations(newLoc);
+        localStorage.setItem('crisissense_selected_sublocation', selectSubLocation.value);
+        loadWeatherForecast();
+      });
+    }
+
+    if (selectSubLocation) {
+      selectSubLocation.addEventListener('change', () => {
+        localStorage.setItem('crisissense_selected_sublocation', selectSubLocation.value);
+        updateSectorSensorStrip(selectLocation.value, selectSubLocation.value);
+      });
+    }
 
     // Load Open-Meteo Weather independently
     loadWeatherForecast();
